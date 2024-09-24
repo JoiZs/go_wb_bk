@@ -13,8 +13,6 @@ import (
 	dutil "github.com/libp2p/go-libp2p/p2p/discovery/util"
 )
 
-var topicVal string = os.Getenv("topic")
-
 func InitDHT(ctx context.Context, h host.Host) *dht.IpfsDHT {
 	kdht, err := dht.New(ctx, h)
 	if err != nil {
@@ -48,6 +46,9 @@ func InitDHT(ctx context.Context, h host.Host) *dht.IpfsDHT {
 func DiscoverPeer(ctx context.Context, h host.Host) {
 	kdht := InitDHT(ctx, h)
 	routingDiscovery := dryrout.NewRoutingDiscovery(kdht)
+
+	topicVal := os.Getenv("topic")
+
 	dutil.Advertise(ctx, routingDiscovery, topicVal)
 
 	isConnect := false
