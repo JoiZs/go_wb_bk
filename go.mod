@@ -4,7 +4,7 @@ go 1.22.6
 
 require (
 	github.com/joho/godotenv v1.5.1
-	github.com/libp2p/go-libp2p v0.36.3
+	github.com/libp2p/go-libp2p v0.36.4
 	github.com/libp2p/go-libp2p-pubsub v0.12.0
 )
 

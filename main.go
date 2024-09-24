@@ -8,7 +8,8 @@ import (
 func main() {
 	initializer.Init()
 
-	relayN := peercon.InitRelay("/ip4/127.0.0.1/tcp/6565")
+	relayN := peercon.InitNode("/ip4/127.0.0.1/tcp/6565")
 
 	relayN.Start()
+	relayN.MakeRelay()
 }

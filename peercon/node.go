@@ -15,18 +15,18 @@ import (
 	"github.com/libp2p/go-libp2p/p2p/protocol/circuitv2/relay"
 )
 
-type RelayServer struct {
+type LibNode struct {
 	listenAddr string
 	node       *host.Host
 }
 
-func InitRelay(addr string) *RelayServer {
-	return &RelayServer{
+func InitNode(addr string) *LibNode {
+	return &LibNode{
 		listenAddr: addr,
 	}
 }
 
-func (r *RelayServer) Start() {
+func (r *LibNode) Start() {
 	node, err := libp2p.New(libp2p.ListenAddrStrings(r.listenAddr))
 	if err != nil {
 		log.Fatal(err)
@@ -34,11 +34,6 @@ func (r *RelayServer) Start() {
 
 	r.node = &node
 	r.SubTopic()
-
-	_, err = relay.New(node)
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	relayInfo := peerstore.AddrInfo{
 		ID:    node.ID(),
@@ -63,7 +58,14 @@ func (r *RelayServer) Start() {
 	fmt.Println("Shut down server....")
 }
 
-func (r *RelayServer) SubTopic() {
+func (r *LibNode) MakeRelay() {
+	_, err := relay.New(*r.node)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (r *LibNode) SubTopic() {
 	ctx := context.Background()
 	topicVal := os.Getenv("topic")
 
