@@ -10,24 +10,37 @@ import (
 
 	"github.com/libp2p/go-libp2p"
 	pubsub "github.com/libp2p/go-libp2p-pubsub"
+	"github.com/libp2p/go-libp2p/config"
 	"github.com/libp2p/go-libp2p/core/host"
 	peerstore "github.com/libp2p/go-libp2p/core/peer"
 	"github.com/libp2p/go-libp2p/p2p/protocol/circuitv2/relay"
+	quicTransport "github.com/libp2p/go-libp2p/p2p/transport/quic"
+	webrtc "github.com/libp2p/go-libp2p/p2p/transport/webrtc"
+	webtransport "github.com/libp2p/go-libp2p/p2p/transport/webtransport"
 )
 
 type LibNode struct {
-	listenAddr string
+	listenAddr []string
 	node       *host.Host
 }
 
-func InitNode(addr string) *LibNode {
+func InitNode(addr ...string) *LibNode {
 	return &LibNode{
 		listenAddr: addr,
 	}
 }
 
 func (r *LibNode) Start() {
-	node, err := libp2p.New(libp2p.ListenAddrStrings(r.listenAddr))
+	var confOpt []config.Option
+
+	confOpt = append(confOpt,
+		libp2p.Transport(quicTransport.NewTransport),
+		libp2p.Transport(webtransport.New),
+		libp2p.Transport(webrtc.New),
+		libp2p.ListenAddrStrings(r.listenAddr...),
+	)
+
+	node, err := libp2p.New(confOpt...)
 	if err != nil {
 		log.Fatal(err)
 	}
