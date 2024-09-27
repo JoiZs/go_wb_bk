@@ -47,18 +47,21 @@ func (r *LibNode) Start() {
 
 	r.node = &node
 	r.SubTopic()
+	r.MakeRelay()
 
 	relayInfo := peerstore.AddrInfo{
 		ID:    node.ID(),
 		Addrs: node.Addrs(),
 	}
 
-	relayAddrs, err := peerstore.AddrInfoToP2pAddrs(&relayInfo)
+	_, err = peerstore.AddrInfoToP2pAddrs(&relayInfo)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Println("Addrs: ", relayAddrs)
+	for _, addr := range node.Addrs() {
+		log.Printf("Listening on: %s/p2p/%s\n", addr.String(), node.ID())
+	}
+	// fmt.Println("Addrs: ", relayAddrs)
 
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)

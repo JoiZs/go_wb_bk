@@ -11,5 +11,4 @@ func main() {
 	relayN := peercon.InitNode("/ip4/0.0.0.0/udp/9096/webrtc-direct", "/ip4/0.0.0.0/udp/9095/quic-v1", "/ip4/0.0.0.0/udp/9095/quic-v1/webtransport", "/ip4/127.0.0.1/tcp/6565")
 
 	relayN.Start()
-	relayN.MakeRelay()
 }
